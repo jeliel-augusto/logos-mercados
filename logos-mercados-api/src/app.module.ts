@@ -5,6 +5,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { ClientModule } from './client/client.module';
+import { ClientCategoryModule } from './client-category/client-category.module';
+import { ProductModule } from './product/product.module';
+import { OrderModule } from './order/order.module';
 import { User } from './entities/user.entity';
 dotenv.config();
 @Module({
@@ -26,6 +29,9 @@ dotenv.config();
     }),
     AuthModule,
     ClientModule,
+    ClientCategoryModule,
+    ProductModule,
+    OrderModule,
     TypeOrmModule.forFeature([User]),
   ],
   controllers: [AppController],

@@ -24,6 +24,6 @@ export class ClientCategory {
   @ManyToOne(() => Client, { onDelete: 'CASCADE' })
   client: Client;
 
-  @OneToMany(() => Product, product => product.category)
+  @OneToMany(() => Product, (product) => product.category)
   products: Product[];
 }

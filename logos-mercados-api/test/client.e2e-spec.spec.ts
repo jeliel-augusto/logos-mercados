@@ -172,9 +172,7 @@ describe('ClientController (e2e)', () => {
     let clientId: string;
 
     beforeAll(async () => {
-      const clientRepository = moduleFixture.get(
-        'ClientRepository',
-      ) as Repository<Client>;
+      const clientRepository = moduleFixture.get('ClientRepository');
       await clientRepository.deleteAll();
       // Create a client to test with
       const response = await request(app.getHttpServer())

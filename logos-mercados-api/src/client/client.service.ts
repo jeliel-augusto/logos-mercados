@@ -1,7 +1,13 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Client } from '../entities/client.entity';
+import { ClientCategory } from '../entities/client-category.entity';
+import { Product } from '../entities/product.entity';
 
 export interface CreateClientDto {
   name: string;
@@ -22,6 +28,10 @@ export class ClientService {
   constructor(
     @InjectRepository(Client)
     private readonly clientRepository: Repository<Client>,
+    @InjectRepository(ClientCategory)
+    private readonly clientCategoryRepository: Repository<ClientCategory>,
+    @InjectRepository(Product)
+    private readonly productRepository: Repository<Product>,
   ) {}
 
   async create(createClientDto: CreateClientDto): Promise<Client> {
@@ -29,7 +39,7 @@ export class ClientService {
     const existingClient = await this.clientRepository.findOne({
       where: { name: createClientDto.name },
     });
-    
+
     if (existingClient) {
       throw new ConflictException('Client with this name already exists');
     }
@@ -42,36 +52,68 @@ export class ClientService {
     return this.clientRepository.find();
   }
 
-  async findOne(id: string): Promise<Client> {
+  async findOne(id: string): Promise<any> {
     const client = await this.clientRepository.findOne({ where: { id } });
-    
+
     if (!client) {
       throw new NotFoundException(`Client with ID ${id} not found`);
     }
-    
-    return client;
+
+    // Get client categories
+    const categories = await this.clientCategoryRepository.find({
+      where: { client_id: id },
+    });
+
+    // Get products for each category
+    const groupedCategories = await Promise.all(
+      categories.map(async (category) => {
+        const products = await this.productRepository.find({
+          where: {
+            client_id: id,
+            category_id: category.id,
+          },
+        });
+
+        return {
+          category: category.name,
+          products: products,
+        };
+      }),
+    );
+
+    return {
+      ...client,
+      categories: groupedCategories,
+    };
   }
 
   async update(id: string, updateClientDto: UpdateClientDto): Promise<Client> {
-    const client = await this.findOne(id);
-    
+    const client = await this.clientRepository.findOne({ where: { id } });
+
+    if (!client) {
+      throw new NotFoundException(`Client with ID ${id} not found`);
+    }
+
     // Check if updating name and it conflicts with existing client
     if (updateClientDto.name && updateClientDto.name !== client.name) {
       const existingClient = await this.clientRepository.findOne({
         where: { name: updateClientDto.name },
       });
-      
+
       if (existingClient) {
         throw new ConflictException('Client with this name already exists');
       }
     }
-    
+
     Object.assign(client, updateClientDto);
     return this.clientRepository.save(client);
   }
 
   async remove(id: string): Promise<void> {
-    const client = await this.findOne(id);
+    const client = await this.clientRepository.findOne({ where: { id } });
+    if (!client) {
+      throw new NotFoundException(`Client with ID ${id} not found`);
+    }
     await this.clientRepository.remove(client);
   }
 }

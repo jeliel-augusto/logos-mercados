@@ -20,7 +20,13 @@ import { User } from '../entities/user.entity';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, UserService, JwtAuthService, JwtAuthGuard, RolesGuard],
+  providers: [
+    AuthService,
+    UserService,
+    JwtAuthService,
+    JwtAuthGuard,
+    RolesGuard,
+  ],
   exports: [AuthService, UserService, JwtAuthService, JwtAuthGuard, RolesGuard],
 })
 export class AuthModule {}

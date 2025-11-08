@@ -7,10 +7,10 @@ import { SystemRole } from '../entities/roles.enum';
 export class JwtAuthService {
   constructor(private readonly jwtService: JwtService) {}
 
-  generateToken(user: { 
-    id: string; 
-    login: string; 
-    name: string; 
+  generateToken(user: {
+    id: string;
+    login: string;
+    name: string;
     client_id?: string;
     system_role: SystemRole;
   }): string {

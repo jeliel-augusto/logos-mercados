@@ -1,14 +1,14 @@
-import { 
-  Controller, 
-  Get, 
-  Post, 
-  Body, 
-  Patch, 
-  Param, 
-  Delete, 
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
   UseGuards,
   HttpCode,
-  HttpStatus
+  HttpStatus,
 } from '@nestjs/common';
 import { ClientService } from './client.service';
 import type { CreateClientDto, UpdateClientDto } from './client.service';
@@ -16,22 +16,26 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
 import { SystemRole } from '../entities/roles.enum';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 
 @ApiTags('clients')
-@Controller('clients')
+@Controller('client')
 export class ClientController {
   constructor(private readonly clientService: ClientService) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(SystemRole.ADMIN, SystemRole.SUPER_ADMIN)
   @HttpCode(HttpStatus.CREATED)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Create a new client (ADMIN/SUPER_ADMIN only)' })
+  @ApiOperation({ summary: 'Create a new client' })
   @ApiResponse({ status: 201, description: 'Client created successfully' })
-  @ApiResponse({ status: 403, description: 'Forbidden - insufficient role' })
-  @ApiResponse({ status: 409, description: 'Client with this name already exists' })
+  @ApiResponse({
+    status: 409,
+    description: 'Client with this name already exists',
+  })
   create(@Body() createClientDto: CreateClientDto) {
     return this.clientService.create(createClientDto);
   }
@@ -60,7 +64,10 @@ export class ClientController {
   @ApiResponse({ status: 200, description: 'Client updated successfully' })
   @ApiResponse({ status: 403, description: 'Forbidden - insufficient role' })
   @ApiResponse({ status: 404, description: 'Client not found' })
-  @ApiResponse({ status: 409, description: 'Client with this name already exists' })
+  @ApiResponse({
+    status: 409,
+    description: 'Client with this name already exists',
+  })
   update(@Param('id') id: string, @Body() updateClientDto: UpdateClientDto) {
     return this.clientService.update(id, updateClientDto);
   }

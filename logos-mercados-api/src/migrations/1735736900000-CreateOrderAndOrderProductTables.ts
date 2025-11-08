@@ -209,7 +209,9 @@ export class CreateOrderAndOrderProductTables1735736900000
     `);
 
     // Enable Row Level Security on order_product table
-    await queryRunner.query(`ALTER TABLE "order_product" ENABLE ROW LEVEL SECURITY`);
+    await queryRunner.query(
+      `ALTER TABLE "order_product" ENABLE ROW LEVEL SECURITY`,
+    );
 
     // Create RLS policy for order_product table
     await queryRunner.query(`

@@ -22,11 +22,15 @@ export class UserService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<Omit<User, 'password_hash'>> {
+  async create(
+    createUserDto: CreateUserDto,
+  ): Promise<Omit<User, 'password_hash'>> {
     const { name, login, password, client_id } = createUserDto;
 
     // Check if user already exists
-    const existingUser = await this.userRepository.findOne({ where: { login } });
+    const existingUser = await this.userRepository.findOne({
+      where: { login },
+    });
     if (existingUser) {
       throw new ConflictException('User with this login already exists');
     }
@@ -43,10 +47,10 @@ export class UserService {
     });
 
     const savedUser = await this.userRepository.save(user);
-    
+
     // Remove password hash from response
     const { password_hash: _passwordHash, ...userWithoutPassword } = savedUser;
-    
+
     return userWithoutPassword;
   }
 
@@ -60,7 +64,15 @@ export class UserService {
   async findByLogin(login: string): Promise<User | null> {
     return this.userRepository.findOne({
       where: { login },
-      select: ['id', 'login', 'name', 'password_hash', 'client_id', 'created_at', 'updated_at'],
+      select: [
+        'id',
+        'login',
+        'name',
+        'password_hash',
+        'client_id',
+        'created_at',
+        'updated_at',
+      ],
     });
   }
 }

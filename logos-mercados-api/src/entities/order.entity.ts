@@ -9,6 +9,13 @@ import {
 import { Client } from './client.entity';
 import { OrderProduct } from './order-product.entity';
 
+export enum OrderStatus {
+  CREATED = 'CREATED',
+  ACCEPTED = 'ACCEPTED',
+  IN_DELIVERY = 'IN_DELIVERY',
+  CONCLUDED = 'CONCLUDED',
+}
+
 @Entity()
 @Index(['client_id'])
 @Index(['requested_at'])
@@ -22,6 +29,13 @@ export class Order {
 
   @Column({ name: 'client_id' })
   client_id: string;
+
+  @Column({
+    type: 'enum',
+    enum: OrderStatus,
+    default: OrderStatus.CREATED,
+  })
+  status: OrderStatus;
 
   @Column({ name: 'requested_at', type: 'timestamp', nullable: true })
   requested_at: Date;

@@ -16,7 +16,9 @@ export class OrderProduct {
   @Column({ name: 'total_value', type: 'decimal', precision: 10, scale: 2 })
   total_value: number;
 
-  @ManyToOne(() => Order, order => order.orderProducts, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Order, (order) => order.orderProducts, {
+    onDelete: 'CASCADE',
+  })
   order: Order;
 
   @ManyToOne(() => Product, { onDelete: 'CASCADE' })

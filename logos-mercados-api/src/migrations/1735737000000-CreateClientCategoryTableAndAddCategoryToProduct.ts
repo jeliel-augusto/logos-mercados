@@ -93,7 +93,9 @@ export class CreateClientCategoryTableAndAddCategoryToProduct1735737000000
     );
 
     // Enable Row Level Security on client_category table
-    await queryRunner.query(`ALTER TABLE "client_category" ENABLE ROW LEVEL SECURITY`);
+    await queryRunner.query(
+      `ALTER TABLE "client_category" ENABLE ROW LEVEL SECURITY`,
+    );
 
     // Create RLS policy for client_category table
     await queryRunner.query(`

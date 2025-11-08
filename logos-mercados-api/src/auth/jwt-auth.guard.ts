@@ -1,4 +1,8 @@
-import { Injectable, ExecutionContext, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  ExecutionContext,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { JwtAuthService } from './jwt.service';
 import { SystemRole } from '../entities/roles.enum';
@@ -28,7 +32,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     }
 
     const token = this.jwtAuthService.extractTokenFromHeader(authHeader);
-    
+
     if (!token) {
       throw new UnauthorizedException('Invalid token format');
     }
