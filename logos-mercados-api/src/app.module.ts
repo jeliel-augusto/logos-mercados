@@ -6,8 +6,10 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { ClientModule } from './client/client.module';
 import { ClientCategoryModule } from './client-category/client-category.module';
+import { GlobalCategoryModule } from './global-category/global-category.module';
 import { ProductModule } from './product/product.module';
 import { OrderModule } from './order/order.module';
+import { PromotionModule } from './promotion/promotion.module';
 import { User } from './entities/user.entity';
 dotenv.config();
 @Module({
@@ -30,8 +32,10 @@ dotenv.config();
     AuthModule,
     ClientModule,
     ClientCategoryModule,
+    GlobalCategoryModule,
     ProductModule,
     OrderModule,
+    PromotionModule,
     TypeOrmModule.forFeature([User]),
   ],
   controllers: [AppController],
