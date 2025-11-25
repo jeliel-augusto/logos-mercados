@@ -2,29 +2,7 @@ import { Text } from '@/components/ui/text';
 import { TagIcon } from 'lucide-react-native';
 import { Pressable, ScrollView, View } from 'react-native';
 
-const PROMOTIONS = [
-  {
-    id: '1',
-    title: 'Oferta do Dia',
-    description: 'Até 50% de desconto em frutas',
-    bgColor: 'bg-primary/10',
-    textColor: 'text-primary',
-  },
-  {
-    id: '2',
-    title: 'Frete Grátis',
-    description: 'Em compras acima de R$ 50',
-    bgColor: 'bg-green-100',
-    textColor: 'text-green-700',
-  },
-  {
-    id: '3',
-    title: 'Combo Família',
-    description: 'Economize comprando junto',
-    bgColor: 'bg-amber-100',
-    textColor: 'text-amber-700',
-  },
-];
+const PROMOTIONS = [];
 
 export function PromotionBanner() {
   return (

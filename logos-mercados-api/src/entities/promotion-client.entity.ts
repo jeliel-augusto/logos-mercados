@@ -1,8 +1,16 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
-import { Promotion, PromotionTargetType } from './promotion.entity';
-import { GlobalCategory } from './global-category.entity';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { ClientCategory } from './client-category.entity';
+import { GlobalCategory } from './global-category.entity';
 import { Product } from './product.entity';
+import { Promotion, PromotionTargetType } from './promotion.entity';
 
 @Entity()
 export class PromotionClient {
@@ -18,7 +26,12 @@ export class PromotionClient {
 
   @Column({
     type: 'enum',
-    enum: PromotionTargetType,
+    enum: [
+      'all_products',
+      'global_category',
+      'client_category',
+      'specific_products',
+    ],
   })
   targetType: PromotionTargetType;
 

@@ -1,11 +1,14 @@
 import {
-  Injectable,
   ExecutionContext,
+  Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { JwtAuthService } from './jwt.service';
+import { Observable } from 'rxjs';
 import { SystemRole } from '../entities/roles.enum';
+import { JwtAuthService } from './jwt.service';
+import { IS_PUBLIC_KEY } from './public.decorator';
 
 export interface JwtPayload {
   sub: string;
@@ -19,31 +22,50 @@ export interface JwtPayload {
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
-  constructor(private readonly jwtAuthService: JwtAuthService) {
+  constructor(
+    private readonly jwtAuthService: JwtAuthService,
+    private readonly reflector: Reflector,
+  ) {
     super();
   }
 
-  canActivate(context: ExecutionContext) {
+  canActivate(
+    context: ExecutionContext,
+  ): boolean | Promise<boolean> | Observable<boolean> {
+    const isPublic = this.reflector.get<boolean>(
+      IS_PUBLIC_KEY,
+      context.getHandler(),
+    );
+
+    if (isPublic) {
+      return true;
+    }
+
     const request = context.switchToHttp().getRequest();
-    const authHeader = request.headers.authorization;
+    const authHeader = request.header('Authorization');
 
     if (!authHeader) {
       throw new UnauthorizedException('Authorization header is required');
     }
 
-    const token = this.jwtAuthService.extractTokenFromHeader(authHeader);
+    const token = authHeader.replace('Bearer ', '');
+    const payload = this.jwtAuthService.verifyToken(token);
 
-    if (!token) {
-      throw new UnauthorizedException('Invalid token format');
+    if (!payload) {
+      throw new UnauthorizedException('Invalid token');
     }
 
-    try {
-      const payload = this.jwtAuthService.verifyToken(token);
-      request.user = payload;
-      return true;
-    } catch (error) {
-      throw new UnauthorizedException('Invalid or expired token');
+    request.user = payload;
+    return true;
+  }
+
+  handleRequest(err, user, info) {
+    if (err || !user) {
+      throw (
+        err || new UnauthorizedException('Authorization header is required')
+      );
     }
+    return user;
   }
 }
 

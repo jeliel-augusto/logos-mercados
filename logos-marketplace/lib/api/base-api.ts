@@ -11,7 +11,7 @@ export const baseApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ['GlobalCategory'],
+  tagTypes: ['GlobalCategory', 'Client', 'Product', 'Category'],
   endpoints: () => ({}),
   keepUnusedDataFor: 60,
   refetchOnMountOrArgChange: 30,

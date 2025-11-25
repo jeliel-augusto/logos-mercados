@@ -5,7 +5,6 @@ import { ActivityIndicator, ScrollView, View } from 'react-native';
 
 export function CategoryList() {
   const { data: categories, isLoading, error } = useGetGlobalCategoriesQuery();
-  console.log(categories);
   if (isLoading) {
     return (
       <View className="bg-background py-4">

@@ -2,14 +2,14 @@ import {
   Column,
   Entity,
   Index,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
-  JoinColumn,
 } from 'typeorm';
 import { Client } from './client.entity';
-import { Product } from './product.entity';
 import { GlobalCategory } from './global-category.entity';
+import { Product } from './product.entity';
 
 @Entity()
 @Index(['client_id'])
@@ -24,6 +24,7 @@ export class ClientCategory {
   client_id: string;
 
   @ManyToOne(() => Client, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'client_id' })
   client: Client;
 
   @Column({ name: 'global_category_id', nullable: true })

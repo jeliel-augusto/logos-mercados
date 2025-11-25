@@ -1,27 +1,28 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
-  UseGuards,
+  Get,
   HttpCode,
   HttpStatus,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
 } from '@nestjs/common';
-import { ClientService } from './client.service';
-import type { CreateClientDto, UpdateClientDto } from './client.service';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { RolesGuard } from '../auth/roles.guard';
-import { Roles } from '../auth/roles.decorator';
-import { SystemRole } from '../entities/roles.enum';
 import {
-  ApiTags,
+  ApiBearerAuth,
   ApiOperation,
   ApiResponse,
-  ApiBearerAuth,
+  ApiTags,
 } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { Public } from '../auth/public.decorator';
+import { Roles } from '../auth/roles.decorator';
+import { RolesGuard } from '../auth/roles.guard';
+import { SystemRole } from '../entities/roles.enum';
+import type { CreateClientDto, UpdateClientDto } from './client.service';
+import { ClientService } from './client.service';
 
 @ApiTags('clients')
 @Controller('client')
@@ -41,6 +42,8 @@ export class ClientController {
   }
 
   @Get()
+  @Public()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get all clients' })
   @ApiResponse({ status: 200, description: 'Clients retrieved successfully' })
   findAll() {
@@ -48,6 +51,8 @@ export class ClientController {
   }
 
   @Get(':id')
+  @Public()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get client by ID' })
   @ApiResponse({ status: 200, description: 'Client retrieved successfully' })
   @ApiResponse({ status: 404, description: 'Client not found' })
