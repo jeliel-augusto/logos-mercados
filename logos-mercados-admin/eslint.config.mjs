@@ -1,18 +1,22 @@
-import { defineConfig, globalIgnores } from "eslint/config";
-import nextVitals from "eslint-config-next/core-web-vitals";
-import nextTs from "eslint-config-next/typescript";
+import mantine from 'eslint-config-mantine';
+import { defineConfig } from 'eslint/config';
+import tseslint from 'typescript-eslint';
 
-const eslintConfig = defineConfig([
-  ...nextVitals,
-  ...nextTs,
-  // Override default ignores of eslint-config-next.
-  globalIgnores([
-    // Default ignores of eslint-config-next:
-    ".next/**",
-    "out/**",
-    "build/**",
-    "next-env.d.ts",
-  ]),
-]);
-
-export default eslintConfig;
+// @ts-check
+export default defineConfig(
+  tseslint.configs.recommended,
+  ...mantine,
+  { ignores: ['**/*.{mjs,cjs,js,d.ts,d.mts}', '.next'] },
+  {
+    files: ['**/*.story.tsx'],
+    rules: { 'no-console': 'off' },
+  },
+  {
+    languageOptions: {
+      parserOptions: {
+        tsconfigRootDir: process.cwd(),
+        project: ['./tsconfig.json'],
+      },
+    },
+  }
+);
